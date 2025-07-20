@@ -9,15 +9,18 @@ class ScannerPage extends StatefulWidget {
 }
 
 class _ScannerPageState extends State<ScannerPage> {
-  bool scanned = false;
+  bool _scanned = false;
 
-  void onDetect(BarcodeCapture capture) {
-    if (scanned) return;
+  void _onDetect(BarcodeCapture capture) {
+    if (_scanned) return;
+
     final code = capture.barcodes.first.rawValue;
-    if (code != null && code.isNotEmpty) {
-      scanned = true;
-      Navigator.pop(context, code);
-    }
+    if (code == null || code.isEmpty) return;
+
+    _scanned = true;
+    Navigator.pop(context, {
+      "codigo": code,
+    });
   }
 
   @override
@@ -25,7 +28,7 @@ class _ScannerPageState extends State<ScannerPage> {
     return Scaffold(
       body: MobileScanner(
         controller: MobileScannerController(),
-        onDetect: onDetect,
+        onDetect: _onDetect,
       ),
     );
   }
