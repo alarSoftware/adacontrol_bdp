@@ -18,9 +18,37 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadRequest(
-        Uri.parse('https://2cad7a147326.ngrok-free.app'), // Tu URL
-      );
+      ..addJavaScriptChannel(
+        'FlutterChannel',
+        onMessageReceived: (JavaScriptMessage message) async {
+          final data = message.message;
+
+          if (data == 'gps') {
+            final position = await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high);
+            final lat = position.latitude;
+            final lon = position.longitude;
+            final accuracy = position.accuracy;
+
+            // Llama a JS con los datos de ubicación
+            _controller.runJavaScript('''
+              document.getElementById("gps").value = "$lat, $lon";
+              document.getElementById("precision").value = "$accuracy m";
+              document.getElementById("estado-gps").innerText = "Ubicación actualizada: $lat, $lon (±$accuracy m)";
+          ''');
+          }
+
+          if (data == 'escanear') {
+            // Simulación o implementación real con código de barras
+            const codigo = "ABC123"; // Reemplazá por tu lógica de escaneo real
+            _controller.runJavaScript('''
+              document.getElementById("codigo").value = "$codigo";
+              document.getElementById("cd").innerText = "Código: $codigo";
+          ''');
+          }
+        },
+      )
+      ..loadRequest(Uri.parse('http://192.168.3.213:8812/reportes/compras'));
   }
 
   @override
