@@ -34,7 +34,8 @@ dependencies:
   webview_flutter: ^4.4.1
   webview_flutter_android: ^3.14.0
   geolocator: ^11.0.0
-
+  dropdown_search: ^5.0.6
+  http: ^0.13.6
 
 
 
