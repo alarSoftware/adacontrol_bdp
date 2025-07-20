@@ -53,7 +53,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
         },
       )
       ..loadRequest(
-        Uri.parse('https://c42441bcbc86.ngrok-free.app/reportes/ventas'),
+        Uri.parse('http://localhost:8812/reportes/ventas'),
       );
   }
 
