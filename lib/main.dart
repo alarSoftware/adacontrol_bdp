@@ -56,12 +56,22 @@ class _WebViewScreenState extends State<WebViewScreen> {
           }
 
           if (action == "gps") {
+            _controller.runJavaScript('''
+    document.getElementById('estado-gps').innerText = 'Obteniendo ubicación...';
+  ''');
+
             final pos = await obtenerPosicionPrecisa();
+
             if (pos != null) {
               _controller.runJavaScript('''
-          document.getElementById('gps').value = '${pos.latitude},${pos.longitude}';
-          document.getElementById('precision').value = '${pos.accuracy.toStringAsFixed(1)} m';
-        ''');
+      document.getElementById('gps').value = '${pos.latitude},${pos.longitude}';
+      document.getElementById('precision').value = '${pos.accuracy.toStringAsFixed(1)} m';
+      document.getElementById('estado-gps').innerText = 'Ubicación obtenida: ${pos.latitude}, ${pos.longitude}';
+    ''');
+            } else {
+              _controller.runJavaScript('''
+      document.getElementById('estado-gps').innerText = 'No se pudo obtener la ubicación.';
+    ''');
             }
           }
         },
